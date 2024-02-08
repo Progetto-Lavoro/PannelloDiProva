@@ -2,16 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\EmployeeResource\Pages;
-use App\Filament\Resources\EmployeeResource\RelationManagers;
-use App\Models\Employee;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Employee;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\EmployeeResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\EmployeeResource\RelationManagers;
 
 class EmployeeResource extends Resource
 {
@@ -23,38 +24,54 @@ class EmployeeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('country_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('state_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('city_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('department_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('first_name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('last_name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('middle_name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('address')
+                // Forms\Components\TextInput::make('country_id')
+                //     ->required()
+                //     ->numeric(),
+                // Forms\Components\TextInput::make('state_id')
+                //     ->required()
+                //     ->numeric(),
+                // Forms\Components\TextInput::make('city_id')
+                //     ->required()
+                //     ->numeric(),
+                // Forms\Components\TextInput::make('department_id')
+                //     ->required()
+                //     ->numeric(),
+
+                // questo serve per creare un riquadro a parte e poterlo customizzare meglio "Section"
+                Forms\Components\Section::make('User Name')
+                ->description('Put the user name details in.')
+                ->schema([
+
+                    Forms\Components\TextInput::make('first_name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('zip_code')
+                    Forms\Components\TextInput::make('last_name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DatePicker::make('date_of_birth')
+                    Forms\Components\TextInput::make('middle_name')
+                    ->required()
+                    ->maxLength(255)
+                ])->columns(3),
+                Forms\Components\Section::make('User address')
+                ->schema([
+                    Forms\Components\TextInput::make('address')
+                    ->required()
+                    ->maxLength(255),
+                    Forms\Components\TextInput::make('zip_code')
+                    ->required()
+                    ->maxLength(255),
+                ])->columns(2),
+                Forms\Components\Section::make('Dates')
+                ->schema([
+                    Forms\Components\DatePicker::make('date_of_birth')
                     ->required(),
-                Forms\Components\DatePicker::make('date_hired')
-                    ->required(),
-            ]);
+                    Forms\Components\DatePicker::make('date_hired')
+                    ->required()
+                    // con questo comando allunghi il capo del form in modo che prenda tutta la larghezza disponibile.
+                    // ->columnSpanFull(),
+                ])->columns(2),
+                    // qua si decidono il numero di colonnne in cui sono divisi i campi del form(non è un opzione di default)
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table
